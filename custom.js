@@ -82,4 +82,11 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
     //     // do stuff
      })
 
+    require(["nbextensions/toc"], function (toc) {
+      console.log('Table of Contents extension loaded');
+      //toc.load_ipython_extension();
+      IPython.load_extensions('toc');
+      // If you want to load the toc by default, add:
+      toc.table_of_contents();
+    });
 });

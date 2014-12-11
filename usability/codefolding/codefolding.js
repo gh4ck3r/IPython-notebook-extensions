@@ -6,9 +6,9 @@ var codefolding_extension = (function() {
         console.log("This extension requires IPython 2.x")
         return
     }
-    
+
     var hotKey = "Alt-F";
-    
+
     function toggleFolding(cm) {
         var pos = cm.getCursor();
         var opts = cm.state.foldGutter.options;
@@ -26,7 +26,7 @@ var codefolding_extension = (function() {
     var ret = {};
     var len = arguments.length;
     for (var i=0; i<len; i++) {
-        for (p in arguments[i]) {
+        for (var p in arguments[i]) {
             if (arguments[i].hasOwnProperty(p)) {
                 ret[p] = arguments[i][p];
             }
@@ -59,47 +59,47 @@ var codefolding_extension = (function() {
         }
         cell.metadata.code_folding = lines;
     }
-           
+
     /**
      * Activate codefolding in CodeMirror options, don't overwrite other settings
      *
      */
     function cellFolding(cell) {
-        if (CodeMirror.fold != undefined) { 
+        if (CodeMirror.fold != undefined) {
             var keys = cell.code_mirror.getOption('extraKeys');
-            cell.code_mirror.setOption('extraKeys', collect(keys, foldingKey ));  
+            cell.code_mirror.setOption('extraKeys', collect(keys, foldingKey ));
             var mode = cell.code_mirror.getOption('mode');
             if (mode == 'ipython' ) {
-                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.indent) });                        
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.indent) });
             } else {
-                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.brace) });            
+                cell.code_mirror.setOption('foldGutter',{rangeFinder: new CodeMirror.fold.combine(CodeMirror.fold.firstline, CodeMirror.fold.brace) });
             }
             var gutters = cell.code_mirror.getOption('gutters');
                 var found = jQuery.inArray("CodeMirror-foldgutter", gutters);
                 if ( found == -1) {
                     cell.code_mirror.setOption('gutters', [ gutters , "CodeMirror-foldgutter"]);
-                }            
+                }
             cell.code_mirror.on('fold',update_metadata);
             cell.code_mirror.on('unfold',update_metadata);
         }
     }
-    
+
     /**
      * Add codefolding to new cell
      *
      */
-    createCell = function (event,nbcell,nbindex) {
+    var createCell = function (event,nbcell,nbindex) {
         var cell = nbcell.cell;
         if ((cell instanceof IPython.CodeCell)) {
-            cellFolding(cell)            
+            cellFolding(cell)
         }
     };
-    
+
     /**
     * Add codefolding to existing cells
      *
      */
-    initExtension = function(event) {
+    var initExtension = function(event) {
         var cells = IPython.notebook.get_cells();
         for(var i in cells){
             var cell = cells[i];
@@ -109,9 +109,9 @@ var codefolding_extension = (function() {
                 if ( cell.metadata.code_folding != undefined) {
                     for (var idx in cell.metadata.code_folding) {
                         var line = cell.metadata.code_folding[idx];
-                        var opts = cell.code_mirror.state.foldGutter.options; 
+                        var opts = cell.code_mirror.state.foldGutter.options;
                         cell.code_mirror.foldCode(CodeMirror.Pos(line, 0), opts.rangeFinder);
-                    }            
+                    }
                 }
             }
         }
@@ -125,14 +125,14 @@ var codefolding_extension = (function() {
         link.rel = "stylesheet";
         link.href = require.toUrl(name);
         document.getElementsByTagName("head")[0].appendChild(link);
-    };    
-    load_css("/nbextensions/usability/codefolding/foldgutter.css");     
-    
+    };
+    load_css("/nbextensions/usability/codefolding/foldgutter.css");
+
     /* load codemirror addon */
     /* BUG in '/static/components/codemirror/addon/fold/indent-fold.js' will crash extension at reaload, use local copy */
-    require(['/static/components/codemirror/addon/fold/foldcode.js', 
+    require(['/static/components/codemirror/addon/fold/foldcode.js',
              '/static/components/codemirror/addon/fold/foldgutter.js',
-             '/nbextensions/usability/codefolding/indent-fold.js',             
+             '/nbextensions/usability/codefolding/indent-fold.js',
              '/static/components/codemirror/addon/fold/brace-fold.js',
              '/nbextensions/usability/codefolding/firstline-fold.js'], initExtension)
 })();

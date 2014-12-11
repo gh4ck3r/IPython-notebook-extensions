@@ -89,4 +89,8 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
       // If you want to load the toc by default, add:
       toc.table_of_contents();
     });
+
+    require(['nbextensions/usability/codefolding/codefolding'], function(cf) {
+      IPython.load_extensions('usability/codefolding/codefolding');
+    });
 });

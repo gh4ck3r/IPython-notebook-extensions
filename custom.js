@@ -93,4 +93,8 @@ $([IPython.events]).on('app_initialized.NotebookApp', function(){
     require(['nbextensions/usability/codefolding/codefolding'], function(cf) {
       IPython.load_extensions('usability/codefolding/codefolding');
     });
+
+    require(['nbextensions/usability/python-markdown'], function(cf) {
+      IPython.load_extensions('nbextensions/usability/python-markdown');
+    });
 });
